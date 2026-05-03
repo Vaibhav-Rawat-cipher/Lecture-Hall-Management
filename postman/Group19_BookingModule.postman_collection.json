@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Group 19 — Booking Confirmation Module",
+    "description": "API test collection for Hall Booking Confirmation Module (Group 19). Base URL: http://localhost:5000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000/api" },
+    { "key": "booking_id", "value": "" },
+    { "key": "hall_id",    "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Halls",
+      "item": [
+        {
+          "name": "Add Hall",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/halls", "host": ["{{base_url}}"], "path": ["halls"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hallCode\": \"LH-101\",\n  \"name\": \"Lecture Hall A\",\n  \"capacity\": 60,\n  \"location\": \"Block B, Floor 1\",\n  \"facilities\": [\"Projector\", \"AC\", \"Whiteboard\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Halls",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/halls", "host": ["{{base_url}}"], "path": ["halls"] }
+          }
+        },
+        {
+          "name": "Update Hall",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/halls/{{hall_id}}", "host": ["{{base_url}}"], "path": ["halls", "{{hall_id}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 80,\n  \"facilities\": [\"Projector\", \"AC\", \"Whiteboard\", \"Mic\"],\n  \"isAvailable\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Hall",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/halls/{{hall_id}}", "host": ["{{base_url}}"], "path": ["halls", "{{hall_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking (Allocate Hall)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hallId\": \"{{hall_id}}\",\n  \"hallName\": \"Lecture Hall A\",\n  \"eventName\": \"CSE Department Seminar\",\n  \"bookedBy\": \"Ayush Agarwal\",\n  \"date\": \"2025-06-10\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"11:00\",\n  \"purpose\": \"Annual tech talk for final year students\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] }
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/bookings/{{booking_id}}", "host": ["{{base_url}}"], "path": ["bookings", "{{booking_id}}"] }
+          }
+        },
+        {
+          "name": "Update Booking",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/bookings/{{booking_id}}", "host": ["{{base_url}}"], "path": ["bookings", "{{booking_id}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"eventName\": \"CSE Seminar (Updated)\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"12:00\",\n  \"purpose\": \"Updated description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Booking (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/bookings/{{booking_id}}", "host": ["{{base_url}}"], "path": ["bookings", "{{booking_id}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}
