@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Group 19 - Hall Booking Confirmation Admin Panel" />
+  <title>Admin Panel — Hall Booking System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<header>
+  <div>
+    <h1>Hall Management System — Admin Panel</h1>
+    <span>Group 19 · Booking Confirmation Module</span>
+  </div>
+</header>
+
+<!-- ── Tabs ────────────────────────────────────────────────────── -->
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" id="tab-allocate" onclick="switchTab('allocate')" role="tab" aria-selected="true">
+    Allocate Hall
+  </button>
+  <button class="tab-btn" id="tab-bookings" onclick="switchTab('bookings')" role="tab" aria-selected="false">
+    All Bookings
+  </button>
+  <button class="tab-btn" id="tab-halls" onclick="switchTab('halls')" role="tab" aria-selected="false">
+    Manage Halls
+  </button>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 1 — Allocate Hall                                         -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="tab-content active" id="tab-content-allocate">
+  <p class="section-title">Allocate Lecture Hall for an Event</p>
+  <div class="card">
+    <form id="allocate-form" onsubmit="submitAllocate(event)">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="alloc-hall">Hall</label>
+          <select id="alloc-hall" required>
+            <option value="">— Select Hall —</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="alloc-event">Event Name</label>
+          <input type="text" id="alloc-event" placeholder="e.g. CSE Seminar" required />
+        </div>
+
+        <div class="form-group">
+          <label for="alloc-by">Booked By (Admin)</label>
+          <input type="text" id="alloc-by" placeholder="Your name or roll no." required />
+        </div>
+
+        <div class="form-group">
+          <label for="alloc-date">Date</label>
+          <input type="date" id="alloc-date" required />
+        </div>
+
+        <div class="form-group">
+          <label for="alloc-start">Start Time</label>
+          <input type="time" id="alloc-start" required />
+        </div>
+
+        <div class="form-group">
+          <label for="alloc-end">End Time</label>
+          <input type="time" id="alloc-end" required />
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="alloc-purpose">Purpose (optional)</label>
+          <textarea id="alloc-purpose" placeholder="Brief description of event purpose..."></textarea>
+        </div>
+
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="allocate-submit-btn">Create Booking</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 2 — All Bookings                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="tab-content" id="tab-content-bookings">
+  <p class="section-title">All Bookings</p>
+  <div class="card">
+    <div class="table-wrap">
+      <table id="bookings-table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Hall</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Booked By</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookings-tbody">
+          <tr><td colspan="8" class="loader">Loading bookings…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- TAB 3 — Manage Halls                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<section class="tab-content" id="tab-content-halls">
+  <p class="section-title">Add New Hall</p>
+  <div class="card">
+    <form id="add-hall-form" onsubmit="submitAddHall(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="hall-code">Hall Code</label>
+          <input type="text" id="hall-code" placeholder="e.g. LH-101" required />
+        </div>
+        <div class="form-group">
+          <label for="hall-name">Name</label>
+          <input type="text" id="hall-name" placeholder="e.g. Lecture Hall A" required />
+        </div>
+        <div class="form-group">
+          <label for="hall-capacity">Capacity</label>
+          <input type="number" id="hall-capacity" placeholder="e.g. 60" min="1" required />
+        </div>
+        <div class="form-group">
+          <label for="hall-location">Location</label>
+          <input type="text" id="hall-location" placeholder="e.g. Block B, Floor 1" />
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="hall-facilities">Facilities (comma separated)</label>
+          <input type="text" id="hall-facilities" placeholder="Projector, AC, Whiteboard, Mic" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add Hall</button>
+      </div>
+    </form>
+  </div>
+
+  <p class="section-title">All Halls</p>
+  <div class="card">
+    <div class="table-wrap">
+      <table id="halls-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th>Location</th>
+            <th>Facilities</th>
+            <th>Available</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="halls-tbody">
+          <tr><td colspan="7" class="loader">Loading halls…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- MODAL — Update Booking                                         -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="booking-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Update Booking</h2>
+      <button class="modal-close" onclick="closeModal('booking-modal')" aria-label="Close">&times;</button>
+    </div>
+    <form id="update-booking-form" onsubmit="submitUpdateBooking(event)">
+      <input type="hidden" id="edit-booking-id" />
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="edit-hall">Hall</label>
+          <select id="edit-hall" required>
+            <option value="">— Select Hall —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-event">Event Name</label>
+          <input type="text" id="edit-event" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-by">Booked By</label>
+          <input type="text" id="edit-by" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-date">Date</label>
+          <input type="date" id="edit-date" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-start">Start Time</label>
+          <input type="time" id="edit-start" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-end">End Time</label>
+          <input type="time" id="edit-end" required />
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="edit-purpose">Purpose</label>
+          <textarea id="edit-purpose"></textarea>
+        </div>
+      </div>
+      <div class="form-actions" style="display:flex; gap:8px;">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('booking-modal')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- MODAL — Update Hall                                            -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="hall-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Update Hall Details</h2>
+      <button class="modal-close" onclick="closeModal('hall-modal')" aria-label="Close">&times;</button>
+    </div>
+    <form id="update-hall-form" onsubmit="submitUpdateHall(event)">
+      <input type="hidden" id="edit-hall-id" />
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="edit-hall-name">Name</label>
+          <input type="text" id="edit-hall-name" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-hall-capacity">Capacity</label>
+          <input type="number" id="edit-hall-capacity" min="1" required />
+        </div>
+        <div class="form-group">
+          <label for="edit-hall-location">Location</label>
+          <input type="text" id="edit-hall-location" />
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="edit-hall-facilities">Facilities (comma separated)</label>
+          <input type="text" id="edit-hall-facilities" />
+        </div>
+        <div class="form-group">
+          <label for="edit-hall-available">Available</label>
+          <select id="edit-hall-available">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions" style="display:flex; gap:8px;">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal('hall-modal')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── Toast notification ─────────────────────────────────────── -->
+<div id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

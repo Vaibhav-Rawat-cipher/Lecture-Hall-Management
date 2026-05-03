@@ -1,0 +1,203 @@
+/* ── Reset & Base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  background: #f4f6f8;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+header {
+  background: #1e293b;
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+header h1 { font-size: 16px; font-weight: 600; }
+header span { font-size: 12px; color: #94a3b8; }
+
+/* ── Tabs ────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #dde1e7;
+  padding: 0 24px;
+}
+.tab-btn {
+  padding: 12px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #64748b;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+}
+.tab-btn.active {
+  color: #1e293b;
+  border-bottom-color: #1e293b;
+}
+
+/* ── Content area ────────────────────────────────────────────────── */
+.tab-content { display: none; padding: 24px; }
+.tab-content.active { display: block; }
+
+/* ── Section heading ─────────────────────────────────────────────── */
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+.card {
+  background: #fff;
+  border: 1px solid #dde1e7;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* ── Forms ───────────────────────────────────────────────────────── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+  background: #fff;
+  color: #1a1a1a;
+  outline: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #1e293b;
+}
+.form-group textarea { resize: vertical; min-height: 60px; }
+.form-actions { margin-top: 16px; }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+.btn-primary   { background: #1e293b; color: #fff; }
+.btn-primary:hover { background: #334155; }
+.btn-danger    { background: #dc2626; color: #fff; }
+.btn-danger:hover  { background: #b91c1c; }
+.btn-secondary { background: #e2e8f0; color: #1e293b; }
+.btn-secondary:hover { background: #cbd5e1; }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ── Tables ──────────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: #f1f5f9;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #475569;
+  border-bottom: 1px solid #dde1e7;
+}
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #f8fafc; }
+
+/* ── Status badges ───────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-confirmed  { background: #dcfce7; color: #166534; }
+.badge-cancelled  { background: #fee2e2; color: #991b1b; }
+.badge-available  { background: #dcfce7; color: #166534; }
+.badge-unavailable{ background: #fef9c3; color: #854d0e; }
+
+/* ── Toast ───────────────────────────────────────────────────────── */
+#toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1e293b;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 13px;
+  display: none;
+  z-index: 999;
+}
+#toast.error { background: #dc2626; }
+
+/* ── Modal ───────────────────────────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: #fff;
+  border-radius: 6px;
+  padding: 24px;
+  width: 480px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.modal-header h2 { font-size: 15px; font-weight: 600; }
+.modal-close { background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b; }
+
+/* ── Empty state ─────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* ── Loader ──────────────────────────────────────────────────────── */
+.loader { text-align: center; padding: 20px; color: #94a3b8; }
