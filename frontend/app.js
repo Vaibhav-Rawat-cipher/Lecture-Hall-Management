@@ -2,7 +2,7 @@
    Group 19 — Admin Panel JS
    Backend base URL — change if your server runs on a different port
 ───────────────────────────────────────────────────────────────────────────── */
-const API = 'http://localhost:5000/api';
+const API = 'https://lecture-hall-management.onrender.com/api';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // Utility helpers
@@ -18,7 +18,7 @@ function showToast(msg, isError = false) {
   toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3000);
 }
 
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 function formatDate(dateStr) {
@@ -38,7 +38,7 @@ function switchTab(name) {
     c.classList.toggle('active', c.id === `tab-content-${name}`);
   });
   if (name === 'bookings') loadBookings();
-  if (name === 'halls')    loadHalls();
+  if (name === 'halls') loadHalls();
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -50,7 +50,7 @@ async function loadHalls() {
   const tbody = document.getElementById('halls-tbody');
   tbody.innerHTML = '<tr><td colspan="7" class="loader">Loading…</td></tr>';
   try {
-    const res  = await fetch(`${API}/halls`);
+    const res = await fetch(`${API}/halls`);
     const halls = await res.json();
     hallsCache = halls;
     populateHallDropdowns(halls);
@@ -105,10 +105,10 @@ function populateHallDropdowns(halls) {
 async function submitAddHall(e) {
   e.preventDefault();
   const body = {
-    hallCode:   document.getElementById('hall-code').value.trim(),
-    name:       document.getElementById('hall-name').value.trim(),
-    capacity:   parseInt(document.getElementById('hall-capacity').value),
-    location:   document.getElementById('hall-location').value.trim(),
+    hallCode: document.getElementById('hall-code').value.trim(),
+    name: document.getElementById('hall-name').value.trim(),
+    capacity: parseInt(document.getElementById('hall-capacity').value),
+    location: document.getElementById('hall-location').value.trim(),
     facilities: document.getElementById('hall-facilities').value.split(',').map(f => f.trim()).filter(Boolean),
   };
   try {
@@ -130,12 +130,12 @@ async function submitAddHall(e) {
 function openEditHall(id) {
   const hall = hallsCache.find(h => h._id === id);
   if (!hall) return;
-  document.getElementById('edit-hall-id').value          = hall._id;
-  document.getElementById('edit-hall-name').value        = hall.name;
-  document.getElementById('edit-hall-capacity').value    = hall.capacity;
-  document.getElementById('edit-hall-location').value    = hall.location || '';
-  document.getElementById('edit-hall-facilities').value  = (hall.facilities || []).join(', ');
-  document.getElementById('edit-hall-available').value   = String(hall.isAvailable);
+  document.getElementById('edit-hall-id').value = hall._id;
+  document.getElementById('edit-hall-name').value = hall.name;
+  document.getElementById('edit-hall-capacity').value = hall.capacity;
+  document.getElementById('edit-hall-location').value = hall.location || '';
+  document.getElementById('edit-hall-facilities').value = (hall.facilities || []).join(', ');
+  document.getElementById('edit-hall-available').value = String(hall.isAvailable);
   openModal('hall-modal');
 }
 
@@ -143,14 +143,14 @@ async function submitUpdateHall(e) {
   e.preventDefault();
   const id = document.getElementById('edit-hall-id').value;
   const body = {
-    name:        document.getElementById('edit-hall-name').value.trim(),
-    capacity:    parseInt(document.getElementById('edit-hall-capacity').value),
-    location:    document.getElementById('edit-hall-location').value.trim(),
-    facilities:  document.getElementById('edit-hall-facilities').value.split(',').map(f => f.trim()).filter(Boolean),
+    name: document.getElementById('edit-hall-name').value.trim(),
+    capacity: parseInt(document.getElementById('edit-hall-capacity').value),
+    location: document.getElementById('edit-hall-location').value.trim(),
+    facilities: document.getElementById('edit-hall-facilities').value.split(',').map(f => f.trim()).filter(Boolean),
     isAvailable: document.getElementById('edit-hall-available').value === 'true',
   };
   try {
-    const res  = await fetch(`${API}/halls/${id}`, {
+    const res = await fetch(`${API}/halls/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -224,18 +224,18 @@ async function loadBookings() {
 async function submitAllocate(e) {
   e.preventDefault();
   const hallSel = document.getElementById('alloc-hall');
-  const hallId   = hallSel.value;
+  const hallId = hallSel.value;
   const hallName = hallSel.options[hallSel.selectedIndex]?.dataset.name || '';
 
   const body = {
     hallId,
     hallName,
     eventName: document.getElementById('alloc-event').value.trim(),
-    bookedBy:  document.getElementById('alloc-by').value.trim(),
-    date:      document.getElementById('alloc-date').value,
+    bookedBy: document.getElementById('alloc-by').value.trim(),
+    date: document.getElementById('alloc-date').value,
     startTime: document.getElementById('alloc-start').value,
-    endTime:   document.getElementById('alloc-end').value,
-    purpose:   document.getElementById('alloc-purpose').value.trim(),
+    endTime: document.getElementById('alloc-end').value,
+    purpose: document.getElementById('alloc-purpose').value.trim(),
   };
 
   const btn = document.getElementById('allocate-submit-btn');
@@ -243,7 +243,7 @@ async function submitAllocate(e) {
   btn.textContent = 'Creating…';
 
   try {
-    const res  = await fetch(`${API}/bookings`, {
+    const res = await fetch(`${API}/bookings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -264,7 +264,7 @@ async function submitAllocate(e) {
 async function cancelBooking(id, name) {
   if (!confirm(`Cancel booking for "${name}"?`)) return;
   try {
-    const res  = await fetch(`${API}/bookings/${id}`, { method: 'DELETE' });
+    const res = await fetch(`${API}/bookings/${id}`, { method: 'DELETE' });
     const data = await res.json();
     if (!res.ok) { showToast(data.message || 'Error cancelling booking', true); return; }
     showToast('Booking cancelled');
@@ -279,12 +279,12 @@ function openEditBooking(id) {
   const b = bookingsCache.find(x => x._id === id);
   if (!b) return;
   document.getElementById('edit-booking-id').value = b._id;
-  document.getElementById('edit-event').value       = b.eventName;
-  document.getElementById('edit-by').value          = b.bookedBy;
-  document.getElementById('edit-date').value        = b.date ? b.date.split('T')[0] : '';
-  document.getElementById('edit-start').value       = b.startTime;
-  document.getElementById('edit-end').value         = b.endTime;
-  document.getElementById('edit-purpose').value     = b.purpose || '';
+  document.getElementById('edit-event').value = b.eventName;
+  document.getElementById('edit-by').value = b.bookedBy;
+  document.getElementById('edit-date').value = b.date ? b.date.split('T')[0] : '';
+  document.getElementById('edit-start').value = b.startTime;
+  document.getElementById('edit-end').value = b.endTime;
+  document.getElementById('edit-purpose').value = b.purpose || '';
 
   // Pre-select hall in modal dropdown
   const editHall = document.getElementById('edit-hall');
@@ -303,26 +303,26 @@ function openEditBooking(id) {
 
 async function submitUpdateBooking(e) {
   e.preventDefault();
-  const id       = document.getElementById('edit-booking-id').value;
-  const hallSel  = document.getElementById('edit-hall');
-  const hallId   = hallSel.value;
+  const id = document.getElementById('edit-booking-id').value;
+  const hallSel = document.getElementById('edit-hall');
+  const hallId = hallSel.value;
   const hallName = hallSel.options[hallSel.selectedIndex]?.dataset.name
-                   || hallSel.options[hallSel.selectedIndex]?.textContent
-                   || '';
+    || hallSel.options[hallSel.selectedIndex]?.textContent
+    || '';
 
   const body = {
     hallId,
     hallName,
     eventName: document.getElementById('edit-event').value.trim(),
-    bookedBy:  document.getElementById('edit-by').value.trim(),
-    date:      document.getElementById('edit-date').value,
+    bookedBy: document.getElementById('edit-by').value.trim(),
+    date: document.getElementById('edit-date').value,
     startTime: document.getElementById('edit-start').value,
-    endTime:   document.getElementById('edit-end').value,
-    purpose:   document.getElementById('edit-purpose').value.trim(),
+    endTime: document.getElementById('edit-end').value,
+    purpose: document.getElementById('edit-purpose').value.trim(),
   };
 
   try {
-    const res  = await fetch(`${API}/bookings/${id}`, {
+    const res = await fetch(`${API}/bookings/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
