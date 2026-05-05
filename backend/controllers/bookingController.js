@@ -12,16 +12,25 @@ const createBooking = async (req, res) => {
     }
 
     // Check for time clashes
+    // Use a date range to handle the UTC Date object stored in MongoDB
+    const queryDate = new Date(date);
+    const nextDay = new Date(queryDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    console.log(`[CLASH CHECK] hallId=${hallId} date=${date} start=${startTime} end=${endTime}`);
+
     const clash = await Booking.findOne({
       hallId,
-      date,
+      date: { $gte: queryDate, $lt: nextDay },
       status: 'confirmed',
       startTime: { $lt: endTime },
       endTime: { $gt: startTime }
     });
 
+    console.log(`[CLASH CHECK] result=`, clash ? `CLASHED with ${clash._id}` : 'no clash');
+
     if (clash) {
-      return res.status(400).json({ message: 'Time clash: The hall is already booked during this time.' });
+      return res.status(400).json({ message: `Time clash: "${clash.eventName}" is already booked in this hall from ${clash.startTime} to ${clash.endTime}.` });
     }
 
     // Mark hall as unavailable
