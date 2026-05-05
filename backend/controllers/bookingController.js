@@ -11,6 +11,19 @@ const createBooking = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    // Check for time clashes
+    const clash = await Booking.findOne({
+      hallId,
+      date,
+      status: 'confirmed',
+      startTime: { $lt: endTime },
+      endTime: { $gt: startTime }
+    });
+
+    if (clash) {
+      return res.status(400).json({ message: 'Time clash: The hall is already booked during this time.' });
+    }
+
     // Mark hall as unavailable
     await Hall.findByIdAndUpdate(hallId, { isAvailable: false }).catch(() => {
       // If hallId is not a valid ObjectId yet (string mode), skip silently
@@ -63,6 +76,28 @@ const updateBooking = async (req, res) => {
       if (req.body[field] !== undefined) updates[field] = req.body[field];
     });
 
+    const existingBooking = await Booking.findById(req.params.id);
+    if (!existingBooking) return res.status(404).json({ message: 'Booking not found' });
+
+    // Check for time clashes during update
+    const checkHallId = updates.hallId || existingBooking.hallId;
+    const checkDate = updates.date || existingBooking.date;
+    const checkStartTime = updates.startTime || existingBooking.startTime;
+    const checkEndTime = updates.endTime || existingBooking.endTime;
+
+    const clash = await Booking.findOne({
+      _id: { $ne: req.params.id }, // Exclude the current booking from the clash check
+      hallId: checkHallId,
+      date: checkDate,
+      status: 'confirmed',
+      startTime: { $lt: checkEndTime },
+      endTime: { $gt: checkStartTime }
+    });
+
+    if (clash) {
+      return res.status(400).json({ message: 'Time clash: The hall is already booked during this time.' });
+    }
+
     const booking = await Booking.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
@@ -86,7 +121,7 @@ const cancelBooking = async (req, res) => {
     if (!booking) return res.status(404).json({ message: 'Booking not found' });
 
     // Mark hall available again
-    await Hall.findByIdAndUpdate(booking.hallId, { isAvailable: true }).catch(() => {});
+    await Hall.findByIdAndUpdate(booking.hallId, { isAvailable: true }).catch(() => { });
 
     res.json({ message: 'Booking cancelled', booking });
   } catch (err) {
